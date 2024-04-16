@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const handleLogout = async () => {
-    localStorage.removeItem(CODE);
+    localStorage.removeItem(USER);
     setSigned(false);
   };
 
