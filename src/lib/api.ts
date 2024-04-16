@@ -19,5 +19,5 @@ client.interceptors.request.use((config) => {
 export const http = {
   get: async (url: string, params?: any) => await client.get(url, { params }),
   post: async (url: string, data?: any) => await client.post(url, data),
-  url: (url: string) => `${import.meta.env.VITE_API_BASE_URL}/${url}`
+  url: (url: string) => `${import.meta.env.VITE_API_BASE_URL.replace(/\/\s*$/, "")}/${url}`
 };
