@@ -1,10 +1,35 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { http } from "@/lib/api";
-import { ReactNode, createContext, useContext, useState } from "react";
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useToastStore } from "@/app/stores/toast";
+import { useDownloadStore } from "../stores/download";
+
+type AuthProviderProps = {
+  children?: ReactNode | undefined;
+};
+
+type Value = {
+  value: number;
+  formatted: string;
+};
+
+type User = {
+  name: string;
+  exceeded: boolean;
+  quota: Value;
+  used: Value;
+  available: Value;
+};
 
 interface AuthContextType {
   signed: boolean;
+  user: User|undefined;
   onLogin(code: string): Promise<void>;
   onLogout(): Promise<void>;
 }
@@ -13,14 +38,16 @@ export const USER = "user";
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
-type AuthProviderProps = {
-  children?: ReactNode | undefined;
-};
-
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const { openToast } = useToastStore();
+  const { downloads } = useDownloadStore();
   const token = localStorage.getItem(USER);
   const [signed, setSigned] = useState<boolean>(token !== null);
+  const [user, setUser] = useState<User>();
+
+  useEffect(() => {
+    signed && http.get("me").then(({ data }) => setUser(data));
+  }, [signed, downloads]);
 
   const handleLogin = async (code: string) => {
     try {
@@ -32,7 +59,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     } catch (error: any) {
       const { data } = error.response;
 
-      openToast('Login Failed', data.message);
+      openToast("Login Failed", data.message);
     }
   };
 
@@ -45,6 +72,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     <AuthContext.Provider
       value={{
         signed,
+        user,
         onLogin: handleLogin,
         onLogout: handleLogout,
       }}
