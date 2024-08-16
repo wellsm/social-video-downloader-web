@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { USER } from "@/app/contexts/auth";
 import axios from "axios";
-import axios from "axios";
 
 export const client = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
