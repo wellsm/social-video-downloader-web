@@ -18,6 +18,7 @@
         "The download is blocked; the video size exceeds the quota by more than 50MB": "Download bloqueado, o tamanho do video excede a cota mais que 50MB",
         "Your user's download quota has been exceeded": "A cota de download do seu usuario foi excedida",
         "You have exceeded your download quota. To continue downloading, contact administrator for additional options": "Você excedeu a cota de download disponível. Para continuar baixando, entre em contato com o administrador para opções adicionais",
-        "Download quota exceeded": "Cota de download excedida"
+        "Download quota exceeded": "Cota de download excedida",
+        "Please, insert a valid URL": "Por favor insira um link válido"
     }
 }

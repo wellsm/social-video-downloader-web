@@ -21,10 +21,6 @@ import { useAuth } from "../contexts/auth";
 import { QuotaExceeded } from "./quota-exceeded";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-const downloadSchema = z.object({
-  url: z.string().url(),
-});
-
 export function DownloadForm() {
   const [isDownloading, setIsDownloading] = useState<boolean>(false);
   const { openToast } = useToastStore();
@@ -32,11 +28,24 @@ export function DownloadForm() {
   const { t } = useTranslation();
   const { user } = useAuth();
 
+  const downloadSchema = z.object({
+    url: z
+      .string()
+      .refine(
+        (value) =>
+          /^(https?):\/\/(?=.*\.[a-z]{2,})[^\s$.?#].[^\s]*$/i.test(value),
+        {
+          message: t('Please, insert a valid URL'),
+        }
+      ),
+  });
+
   const form = useForm<z.infer<typeof downloadSchema>>({
     resolver: zodResolver(downloadSchema),
     defaultValues: {
       url: "",
     },
+    mode: 'onChange'
   });
 
   const onSubmit = async (values: z.infer<typeof downloadSchema>) => {
